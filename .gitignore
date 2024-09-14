@@ -1,0 +1,56 @@
+# Binaries for programs and plugins
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+
+# Go dependency directories
+/vendor/
+
+# Go workspace files
+*.mod
+
+
+# Ignore compiled Go binaries
+/go/bin/
+/go/pkg/
+/bin/
+/pkg/
+
+# Editor specific files (optional)
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Ignore build artifacts
+*.out
+*.a
+
+# Ignore coverage tool files
+*.cover
+*.cov
+coverage/
+*.lcov
+
+# Ignore temporary build files and directories
+/tmp/
+/dist/
+/build/
+/release/
+
+# IDE specific (optional, if you use IntelliJ, GoLand, etc.)
+*.iml
+*.ipr
+*.iws
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# environment
+.env

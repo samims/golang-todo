@@ -1,0 +1,72 @@
+services:
+  auth_service:
+    restart: on-failure
+    container_name: auth_service
+    build: ./auth_service
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgres://user:password@auth_db:5432/auth_db  # Correct connection URL
+    env_file:
+      - auth_service/.env
+    networks:
+      - app-network
+    depends_on:
+      - auth_db
+
+  todo_service:
+    restart: on-failure
+    container_name: todo_service
+    build: ./todo_service
+    ports:
+      - "8080:8080"
+    env_file:
+      - todo_service/.env
+    environment:
+      - DATABASE_URL=postgres://user:password@todo_db:5432/todo_db  # Correct connection URL
+    networks:
+      - app-network
+    depends_on:
+      - todo_db
+
+  auth_db:
+    restart: on-failure
+    container_name: auth_db
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=auth_db
+    ports:
+      - "5433:5432"  # Use 5433 on the host to avoid conflicts
+    volumes:
+      - ./auth_service/migrations/001_create_user.sql:/docker-entrypoint-initdb.d/001_create_user.sql
+      - auth_postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  todo_db:
+    restart: on-failure
+    container_name: todo_db
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=todo_db
+    ports:
+      - "5434:5432"  # Use 5434 on the host to avoid conflicts
+    volumes:
+      - todo_postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+
+
+volumes:
+  auth_postgres_data:
+  todo_postgres_data:
+
+
+networks:
+  app-network:
+    driver: bridge
